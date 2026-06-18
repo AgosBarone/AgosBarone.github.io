@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agostino Barone — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0A0F1E;
+      --navy2:   #111827;
+      --teal:    #00D4AA;
+      --teal-dim:#00a888;
+      --amber:   #F5A623;
+      --white:   #F5F7FA;
+      --steel:   #8B9AB0;
+      --card:    #141C2F;
+      --border:  #1E2D47;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── TOPOGRAPHIC CANVAS ── */
+    #topo-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.06;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10,15,30,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--teal);
+      letter-spacing: 0.08em;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--steel);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10rem 4rem 6rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--teal);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.35s forwards;
+    }
+
+    .hero-name span { color: var(--teal); }
+
+    .hero-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 300;
+      color: var(--steel);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s forwards;
+    }
+
+    .terminal-line {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--teal);
+      background: rgba(0,212,170,0.07);
+      border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 6px;
+      padding: 0.9rem 1.4rem;
+      display: inline-block;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.65s forwards;
+    }
+
+    .terminal-line::before { content: '> '; color: var(--amber); }
+
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 1em;
+      background: var(--teal);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.8s forwards;
+    }
+
+    .btn {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--navy);
+    }
+    .btn-primary:hover { background: var(--teal-dim); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-1px); }
+
+    .hero-scroll-indicator {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--steel);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: fadeIn 1s 1.5s both;
+    }
+
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--teal), transparent);
+      animation: scrollPulse 2s infinite;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-photo-wrap {
+      position: relative;
+    }
+
+    .about-photo-wrap img {
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 8px;
+      filter: grayscale(20%);
+    }
+
+    .about-photo-wrap::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: -12px;
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 3/4;
+      border: 2px solid var(--teal);
+      border-radius: 8px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .section-title em {
+      font-style: normal;
+      color: var(--teal);
+    }
+
+    .about-bio {
+      color: var(--steel);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .about-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 2rem;
+    }
+
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 3px;
+      background: rgba(0,212,170,0.08);
+      border: 1px solid rgba(0,212,170,0.25);
+      color: var(--teal);
+      letter-spacing: 0.05em;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat { }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .stat-num span { color: var(--teal); }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--steel);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 4rem;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── PROJECTS ── */
+    #projects {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--teal);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .project-card:hover { border-color: rgba(0,212,170,0.4); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .project-card:hover::after { transform: scaleX(1); }
+
+    .project-card.featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      padding: 2.8rem;
+      border-color: rgba(0,212,170,0.3);
+    }
+
+    .project-card.featured::after { transform: scaleX(1); }
+
+    .project-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border-radius: 3px;
+      margin-bottom: 1rem;
+    }
+
+    .badge-live { background: rgba(0,212,170,0.12); color: var(--teal); border: 1px solid rgba(0,212,170,0.3); }
+    .badge-progress { background: rgba(245,166,35,0.12); color: var(--amber); border: 1px solid rgba(245,166,35,0.3); }
+    .badge-academy { background: rgba(100,130,255,0.12); color: #8899ff; border: 1px solid rgba(100,130,255,0.3); }
+
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    .project-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .project-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--steel);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    .project-desc {
+      color: var(--steel);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tech-pill {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      background: rgba(139,154,176,0.1);
+      color: var(--steel);
+      border: 1px solid var(--border);
+    }
+
+    .project-link {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--teal);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.2s;
+    }
+    .project-link:hover { gap: 0.7rem; }
+
+    .project-visual {
+      background: linear-gradient(135deg, rgba(0,212,170,0.08), rgba(100,130,255,0.08));
+      border-radius: 8px;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      border: 1px solid var(--border);
+      font-size: 6rem;
+      text-align: center;
+    }
+
+    /* ── SKILLS ── */
+    #skills {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .skill-category-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .skill-category-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .skill-item {
+      margin-bottom: 1.2rem;
+    }
+
+    .skill-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .skill-name {
+      font-size: 0.85rem;
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .skill-level {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--steel);
+    }
+
+    .skill-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--teal), var(--teal-dim));
+      border-radius: 2px;
+      transition: width 1s cubic-bezier(0.25,1,0.5,1);
+    }
+
+    .soft-skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .soft-skill-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      transition: border-color 0.2s;
+    }
+    .soft-skill-card:hover { border-color: rgba(0,212,170,0.3); }
+
+    .soft-skill-icon { font-size: 1.4rem; margin-bottom: 0.5rem; display: block; }
+    .soft-skill-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .soft-skill-desc {
+      font-size: 0.75rem;
+      color: var(--steel);
+      line-height: 1.5;
+    }
+
+    /* ── LANGUAGES ── */
+    .lang-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .lang-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.4rem;
+      text-align: center;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .lang-flag { font-size: 1.5rem; margin-bottom: 0.3rem; display: block; }
+    .lang-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.85rem; }
+    .lang-cert { font-size: 0.7rem; color: var(--steel); font-family: 'Space Mono', monospace; }
+
+    /* ── EXPERIENCE ── */
+    #experience {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-top: 3rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--teal), var(--border));
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 3rem;
+      padding-left: 2rem;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2.5rem;
+      top: 0.3rem;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid var(--navy);
+      box-shadow: 0 0 0 4px rgba(0,212,170,0.15);
+    }
+
+    .timeline-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-role {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-company {
+      font-size: 0.85rem;
+      color: var(--steel);
+      margin-bottom: 0.8rem;
+    }
+
+    .timeline-desc {
+      color: var(--steel);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    /* ── EDUCATION ── */
+    #education {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .edu-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      transition: all 0.25s;
+    }
+    .edu-card:hover { border-color: rgba(0,212,170,0.3); transform: translateY(-2px); }
+
+    .edu-logo {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .edu-school {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .edu-degree {
+      font-size: 0.85rem;
+      color: var(--steel);
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .edu-period {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--teal);
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #contact .section-title { font-size: clamp(2rem, 5vw, 3.5rem); }
+
+    .contact-sub {
+      color: var(--steel);
+      max-width: 500px;
+      margin: 1rem auto 3rem;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--steel);
+      text-decoration: none;
+      padding: 0.9rem 1.6rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .contact-item:hover { color: var(--teal); border-color: rgba(0,212,170,0.4); background: rgba(0,212,170,0.04); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--steel);
+    }
+
+    .footer-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--teal);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.15); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      #hero, #about, #projects, #skills, #experience, #education, #contact { padding-left: 1.5rem; padding-right: 1.5rem; }
+      #about { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-photo-wrap img, .about-photo-wrap::before { max-width: 220px; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .project-card.featured { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero-name { font-size: 3rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background topographic canvas -->
+<canvas id="topo-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AB.portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">Environmental Engineer &amp; iOS Developer</p>
+  <h1 class="hero-name">Agostino<br><span>Barone</span></h1>
+  <p class="hero-tagline">Building tools that bridge nature and technology.</p>
+  <div class="terminal-line">
+    Federico II · Apple Developer Academy · Naples, Italy<span class="cursor"></span>
+  </div>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View Projects</a>
+    <a href="#contact" class="btn btn-outline">Get in Touch</a>
+  </div>
+  <div class="hero-scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-photo-wrap reveal">
+    <img src="1781796028943_image.png" alt="Agostino Barone" />
+  </div>
+  <div class="reveal" style="transition-delay:0.1s">
+    <p class="section-label">// who I am</p>
+    <h2 class="section-title">Engineering the <em>future</em>,<br>one app at a time.</h2>
+    <p class="about-bio">
+      I'm a third-year Environmental Engineering student at the University of Naples Federico II, currently enrolled in the Apple Developer Academy — one of the most competitive iOS development programs in Europe. I combine an engineer's analytical mindset with hands-on product development, building apps that reach real users on the App Store. Teamwork, adaptability, and a drive to create meaningful experiences define how I work.
+    </p>
+    <div class="about-tags">
+      <span class="tag">iOS Development</span>
+      <span class="tag">Swift</span>
+      <span class="tag">Environmental Engineering</span>
+      <span class="tag">App Store</span>
+      <span class="tag">UX Thinking</span>
+      <span class="tag">Agile</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num">2<span>+</span></div>
+        <div class="stat-label">Apps on App Store</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2<span>y</span></div>
+        <div class="stat-label">At Apple Developer Academy</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5<span>+</span></div>
+        <div class="stat-label">Projects Built</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <p class="section-label">// what I've built</p>
+    <h2 class="section-title">Projects &amp; <em>Apps</em></h2>
+  </div>
+
+  <div class="projects-grid">
+
+    <!-- TINTO — featured -->
+    <div class="project-card featured reveal">
+      <div>
+        <span class="project-badge badge-live"><span class="badge-dot"></span>Live on App Store</span>
+        <h3 class="project-name">Tinto — Your Museum Buddy</h3>
+        <p class="project-meta">Apple Developer Academy · iOS App</p>
+        <p class="project-desc">
+          Tinto transforms the museum experience by providing visitors with rich, contextual information about artworks in real time. Using CoreML-powered image recognition, users point their camera at any piece and instantly get cultural insights, artist biographies, and curated related works — turning a passive visit into an interactive journey through art history.
+        </p>
+        <div class="project-tech">
+          <span class="tech-pill">Swift</span>
+          <span class="tech-pill">SwiftUI</span>
+          <span class="tech-pill">CoreML</span>
+          <span class="tech-pill">Vision Framework</span>
+          <span class="tech-pill">REST APIs</span>
+        </div>
+        <a href="#" class="project-link">View on App Store →</a>
+      </div>
+      <div class="project-visual">
+        <img src="tinto.png" alt="Tinto App Icon" style="width: 110px; height: 110px; border-radius: 24px; object-fit: cover; box-shadow: 0 8px 24px rgba(0,0,0,0.3);" />
+      </div>
+    </div>
+
+    <!-- HOMEJOY -->
+    <div class="project-card reveal" style="transition-delay:0.1s">
+      <span class="project-badge badge-live"><span class="badge-dot"></span>Live on App Store</span>
+      <img src="homejoy.png" alt="Homejoy Icon" class="project-icon" style="width: 50px; height: 50px; border-radius: 12px; object-fit: cover;" />
+      <h3 class="project-name">Homejoy</h3>
+      <p class="project-meta">Apple Developer Academy · iOS App</p>
+      <p class="project-desc">
+        A smart home management companion designed to simplify daily household tasks and routines. Homejoy helps users track chores, share responsibilities, and maintain a balanced living environment — built with accessibility and family collaboration at its core.
+      </p>
+      <div class="project-tech">
+        <span class="tech-pill">Swift</span>
+        <span class="tech-pill">SwiftUI</span>
+        <span class="tech-pill">CloudKit</span>
+        <span class="tech-pill">Notifications</span>
+      </div>
+      <a href="https://apps.apple.com/it/app/homejoy/id6760473620?l=en-GB" target="_blank" class="project-link">View on App Store →</a>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header reveal">
+    <p class="section-label">// what I know</p>
+    <h2 class="section-title">Skills &amp; <em>Expertise</em></h2>
+  </div>
+
+  <div class="skills-grid">
+    <!-- Tech Skills -->
+    <div class="reveal">
+      <p class="skill-category-title">⚙ Technical Skills</p>
+
+      <div class="skill-item">
+        <div class="skill-row">
+          <span class="skill-name">Swift / SwiftUI</span>
+          <span class="skill-level">Advanced</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-row">
+          <span class="skill-name">iOS Development</span>
+          <span class="skill-level">Advanced</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-row">
+          <span class="skill-name">Xcode</span>
+          <span class="skill-level">Advanced</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-row">
+          <span class="skill-name">CoreML / Vision / ARKit</span>
+          <span class="skill-level">Intermediate</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-row">
+          <span class="skill-name">Git / Version Control</span>
+          <span class="skill-level">Intermediate</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-row">
+          <span class="skill-name">REST APIs / CloudKit</span>
+          <span class="skill-level">Intermediate</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-row">
+          <span class="skill-name">Environmental Systems Analysis</span>
+          <span class="skill-level">Learning</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
+      </div>
+
+      <br/>
+      <p class="skill-category-title" style="margin-top:1rem">🌐 Languages</p>
+      <div class="lang-row">
+        <div class="lang-card">
+          <span class="lang-flag">🇮🇹</span>
+          <div class="lang-name">Italian</div>
+          <div class="lang-cert">Native</div>
+        </div>
+        <div class="lang-card">
+          <span class="lang-flag">🇬🇧</span>
+          <div class="lang-name">English</div>
+          <div class="lang-cert">A2 Cert.</div>
+        </div>
+        <div class="lang-card">
+          <span class="lang-flag">🇫🇷</span>
+          <div class="lang-name">French</div>
+          <div class="lang-cert">A1 Cert.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Soft Skills -->
+    <div class="reveal" style="transition-delay:0.15s">
+      <p class="skill-category-title">🧠 Soft Skills</p>
+      <div class="soft-skills-grid">
+        <div class="soft-skill-card">
+          <span class="soft-skill-icon">🤝</span>
+          <div class="soft-skill-name">Teamwork</div>
+          <div class="soft-skill-desc">Thrives in collaborative environments; actively contributes to group dynamics to elevate the team.</div>
+        </div>
+        <div class="soft-skill-card">
+          <span class="soft-skill-icon">🔄</span>
+          <div class="soft-skill-name">Adaptability</div>
+          <div class="soft-skill-desc">Quick to adjust to new tools, methods, and feedback cycles — essential in agile product teams.</div>
+        </div>
+        <div class="soft-skill-card">
+          <span class="soft-skill-icon">💬</span>
+          <div class="soft-skill-name">Communication</div>
+          <div class="soft-skill-desc">Experience managing customers at Primark and large events builds confident, clear communication.</div>
+        </div>
+        <div class="soft-skill-card">
+          <span class="soft-skill-icon">🎯</span>
+          <div class="soft-skill-name">Problem Solving</div>
+          <div class="soft-skill-desc">Engineering background meets real-world app development to find practical, user-centered solutions.</div>
+        </div>
+        <div class="soft-skill-card">
+          <span class="soft-skill-icon">🌱</span>
+          <div class="soft-skill-name">Growth Mindset</div>
+          <div class="soft-skill-desc">Volunteerism and coaching roles demonstrate commitment to personal and community development.</div>
+        </div>
+        <div class="soft-skill-card">
+          <span class="soft-skill-icon">⏱</span>
+          <div class="soft-skill-name">Time Management</div>
+          <div class="soft-skill-desc">Balancing a full engineering degree with the Academy demands rigorous self-organization.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header reveal">
+    <p class="section-label">// where I've worked</p>
+    <h2 class="section-title">Work <em>Experience</em></h2>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">April 2026 — Present</div>
+      <div class="timeline-role">Retail Assistant</div>
+      <div class="timeline-company">Primark · Centro Commerciale Campania, Marcianise</div>
+      <p class="timeline-desc">
+        Supporting daily retail operations in one of Italy's largest shopping centres. Responsible for customer interaction, stock management, and maintaining a positive in-store experience. This role sharpens communication skills and the ability to thrive in a fast-paced, team-oriented environment.
+      </p>
+    </div>
+
+    <div class="timeline-item reveal" style="transition-delay:0.1s">
+      <div class="timeline-dot" style="background: var(--amber)"></div>
+      <div class="timeline-date">June 2024 — June 2025</div>
+      <div class="timeline-role">Volunteer Coach &amp; Civic Service</div>
+      <div class="timeline-company">Servizio Civile Universale · Stadio Agostino de Cicco, Sant'Anastasia (NA)</div>
+      <p class="timeline-desc">
+        Completed Italy's Universal Civic Service as a coach and volunteer at the local stadium, contributing over a year of dedicated community service. Led youth training sessions, coordinated activities, and acted as a positive role model — demonstrating leadership, patience, and community commitment beyond the classroom.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header reveal">
+    <p class="section-label">// where I've studied</p>
+    <h2 class="section-title">Education &amp; <em>Certifications</em></h2>
+  </div>
+
+  <div class="edu-grid">
+    <div class="edu-card reveal">
+      <span class="edu-logo">🍎</span>
+      <div class="edu-school">Apple Developer Academy</div>
+      <div class="edu-degree">Full-stack iOS Development Program<br>via Università degli Studi di Napoli Federico II</div>
+      <div class="edu-period">2024 — Present (In Progress)</div>
+    </div>
+
+    <div class="edu-card reveal" style="transition-delay:0.1s">
+      <span class="edu-logo">🏛️</span>
+      <div class="edu-school">Università Federico II — Napoli</div>
+      <div class="edu-degree">B.Sc. Environmental &amp; Territory Engineering<br>(Ingegneria per l'Ambiente e il Territorio)</div>
+      <div class="edu-period">September 2023 — Present</div>
+    </div>
+
+    <div class="edu-card reveal" style="transition-delay:0.2s">
+      <span class="edu-logo">🏅</span>
+      <div class="edu-school">Apple Foundation Program</div>
+      <div class="edu-degree">Apple Foundation Certification<br>via Università degli Studi di Napoli Federico II</div>
+      <div class="edu-period">2024</div>
+    </div>
+
+    <div class="edu-card reveal" style="transition-delay:0.3s">
+      <span class="edu-logo">🎓</span>
+      <div class="edu-school">ISS Luca Pacioli</div>
+      <div class="edu-degree">Scientific High School — Applied Sciences<br>Graduation Grade: 82/100</div>
+      <div class="edu-period">Graduated 2023</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <p class="section-label">// let's connect</p>
+    <h2 class="section-title">Get in <em>Touch</em></h2>
+    <p class="contact-sub">Open to collaborations, new projects, and conversations about technology and sustainability.</p>
+    <div class="contact-links">
+      <a class="contact-item" href="mailto:ago.barone03@gmail.com">
+        ✉ ago.barone03@gmail.com
+      </a>
+      <a class="contact-item" href="tel:+393404791372">
+        📞 +39 340 4791372
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-text">© 2026 Agostino Barone. Built with intention.</div>
+  <div class="footer-logo">AB.dev</div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+  /* Topographic background */
+  const canvas = document.getElementById('topo-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drawTopo();
+  }
+
+  function drawTopo() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const lines = 18;
+    const step = canvas.height / lines;
+
+    for (let i = 0; i < lines; i++) {
+      ctx.beginPath();
+      ctx.strokeStyle = '#00D4AA';
+      ctx.lineWidth = 0.8;
+
+      const y = i * step;
+      ctx.moveTo(0, y);
+
+      for (let x = 0; x <= canvas.width; x += 6) {
+        const nx = x / canvas.width;
+        const ny = i / lines;
+        const noise = Math.sin(nx * 8 + ny * 5) * 18
+                    + Math.sin(nx * 3.5 + ny * 12) * 12
+                    + Math.sin(nx * 17 + ny * 2) * 6;
+        ctx.lineTo(x, y + noise);
+      }
+
+      ctx.stroke();
+    }
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  /* Reveal on scroll */
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  /* Skill bar animation */
+  const skillBars = document.querySelectorAll('.skill-fill');
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.width = e.target.style.width;
+        barObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  skillBars.forEach(bar => {
+    const targetW = bar.style.width;
+    bar.style.width = '0%';
+    setTimeout(() => {
+      const barObs2 = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            bar.style.width = targetW;
+            barObs2.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      barObs2.observe(bar.parentElement);
+    }, 100);
+  });
+
+  /* Typewriter for terminal line */
+  const text = "Federico II · Apple Developer Academy · Naples, Italy";
+  const termEl = document.querySelector('.terminal-line');
+  const cursor = termEl.querySelector('.cursor');
+  termEl.innerHTML = '> <span class="typed-text"></span><span class="cursor"></span>';
+  const typed = termEl.querySelector('.typed-text');
+  let i = 0;
+  function typeWriter() {
+    if (i < text.length) {
+      typed.textContent += text[i++];
+      setTimeout(typeWriter, 42);
+    }
+  }
+  setTimeout(typeWriter, 900);
+</script>
+
+</body>
+</html>
